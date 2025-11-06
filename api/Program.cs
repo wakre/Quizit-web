@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using api.DAL;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
