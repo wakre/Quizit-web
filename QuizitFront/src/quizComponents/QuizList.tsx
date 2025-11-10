@@ -1,10 +1,9 @@
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 const QuizList: React.FC = () => {
-  const navigate = useNavigate();
 
   return (
     <div className="container mt-5">

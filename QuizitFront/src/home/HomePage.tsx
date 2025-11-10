@@ -1,12 +1,8 @@
-
-// src/home/Homepage.tsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Homepage: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="text-center" style={{ marginTop: '100px' }}>
       <h1 className="display-4">Welcome to QUIZIT</h1>
@@ -16,22 +12,22 @@ const Homepage: React.FC = () => {
         <div className="col-sm-6">
           <div className="row">
             <div className="col-6">
-              <button
+              <Link
+                to="/QuizList"
                 className="btn btn-success btn-lg w-100"
-                style={{ height: '100px', paddingTop: '30px' }}
-                onClick={() => navigate('/QuizList.tsx')}
+                style={{ height: '100px', paddingTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 View Available Quizzes
-              </button>
+              </Link>
             </div>
             <div className="col-6">
-              <button
+              <Link
+                to="/CreateQuiz"
                 className="btn btn-primary btn-lg w-100"
-                style={{ height: '100px', paddingTop: '30px' }}
-                onClick={() => navigate('/create-quiz')}
+                style={{ height: '100px', paddingTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
                 Create Your Own Quiz
-              </button>
+              </Link>
             </div>
           </div>
         </div>

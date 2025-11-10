@@ -1,7 +1,14 @@
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+const CreateQuiz = ()=> {
+
+    return(
+        <div>
+            
+        </div>
+    );
+}
 export default CreateQuiz;
