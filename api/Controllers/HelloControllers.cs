@@ -9,7 +9,7 @@ namespace MyBackend.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new { message = "Hello from .NET 8 API!" });
+            return Ok(new { message = "Hello from .NET 8 API!" }); 
         }
     }
 }

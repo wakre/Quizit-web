@@ -6,8 +6,10 @@ namespace api.Models
     {
         [Key]
         public int CategoryId { get; set; } // unique ID for the category
-        
+
         [Required(ErrorMessage = "Category name is required")]
         public string Name { get; set; } = string.Empty; // category name
+        public List<Quiz> Quizzes { get; set; } = new();
+
     }
 } 

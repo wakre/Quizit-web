@@ -1,23 +1,37 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace api.Models
 {
     public class User
     {
+        [Key]
         public int UserId { get; set; }
 
-        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{2,40}", ErrorMessage = "The name must be numbers or letters and between 2 to 40 characters.")]
+        [Required]
+        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{2,40}",
+            ErrorMessage = "The name must b a numbers or letters between 2 to 40 characters.")]
         [Display(Name = "User Name")]
         public string UserName { get; set; } = string.Empty;
+
+
         [Required]
+        [EmailAddress(ErrorMessage = "You must have a valid email")]
+        [Display(Name = "Email Address")]
+        public string Email { get; set; } = string.Empty;
+        
 
-        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{9,40}", ErrorMessage = " you need a strong password with minimum 9 characters ")]
-        [Display(Name = "Password")]
-        public string Password { get; set; } = string.Empty;
         [Required]
+        [Display(Name = "Password Hash")]
+        public string PasswordHash { get; set; } = string.Empty;
 
-
-        public required List<Quiz> Quizzes { get; set;  }
+        [NotMapped]
+        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{9,40}",
+            ErrorMessage = "You need a strong password with minimum 9 characters!")]
+        [Display(Name = "Password (input only)")]
+        public string? Password { get; set; }
+        
+        public List<Quiz> Quizzes { get; set; } = new();
 
     }
 }

@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace api.Models
 {
-    //represents one quiz question
     public class Question : IValidatableObject //validation logic
     {
+        [Key]
         public int QuestionId { get; set; } //primary key for question
 
         [Required(ErrorMessage = "Please add a question")]
@@ -15,8 +15,9 @@ namespace api.Models
         public string? ImageUrl { get; set; }  //optional Url for image connected to question
 
         //answers connected to the question
-        public List<Answer> Answers { get; set; } = new(); 
+        public List<Answer> Answers { get; set; } = new();
 
+        [ForeignKey("Quiz")]
         public int QuizId { get; set; } //foreign key pointing to the quiz
         public Quiz Quiz { get; set; } = null!; //navigation property, quiz object
 
