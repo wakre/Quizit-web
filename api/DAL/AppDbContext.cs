@@ -5,10 +5,8 @@ namespace api.DAL
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        
 
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<User> Users { get; set; }
@@ -33,6 +31,22 @@ namespace api.DAL
                 .WithOne(a => a.Question)
                 .HasForeignKey(a => a.QuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // User → Quizzes (1-mange)
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Quizzes)
+                .WithOne(q => q.User)
+                .HasForeignKey(q => q.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //Category → Quizzes (1-mange)
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Quizzes)
+                .WithOne(q => q.Category)
+                .HasForeignKey(Queryable => Queryable.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            
         }
     }
 }
