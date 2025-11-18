@@ -28,6 +28,6 @@ namespace api.Models
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; } = null!;
-        public List<Question> Questions { get; set; } = new(); //list of questions in quiz
+       // public List<Question> Questions { get; set; } = new(); //list of questions in quiz
     }
 }

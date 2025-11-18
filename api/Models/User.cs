@@ -10,7 +10,7 @@ namespace api.Models
 
         [Required]
         [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{2,40}",
-            ErrorMessage = "The name must b a numbers or letters between 2 to 40 characters.")]
+            ErrorMessage = "The name must be a numbers or letters between 2 to 40 characters.")]
         [Display(Name = "User Name")]
         public string UserName { get; set; } = string.Empty;
 
