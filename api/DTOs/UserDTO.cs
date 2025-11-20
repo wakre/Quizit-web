@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace api.Models
+namespace api.DTOs
 
 {
-    public class UserDTO
+    public class UserDto
     {
         public int UserId{get; set; }
         public string UserName{get; set; }=string.Empty;

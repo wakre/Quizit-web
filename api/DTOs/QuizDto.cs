@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace api.Models
+namespace api.DTOs
 {
     public class QuizDto
     {

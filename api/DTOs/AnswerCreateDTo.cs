@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace api.Models
+namespace api.DTOs
 {
-    public class AnswerCreateDTo
+    public class AnswerCreateDto
     {
         public string Text{get; set; }=string.Empty;
         public bool IsCorrect{get; set; }

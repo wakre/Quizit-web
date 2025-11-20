@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace api.Models
+namespace api.DTOs
 {
-    public class LoginDto
+    public class UserLoginDto
     {
         [Required]
         public string Email {get; set; }= string.Empty;

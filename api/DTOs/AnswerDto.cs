@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace api.Models
+namespace api.DTOs
 {
-    public class AnswerDTO
+    public class AnswerDto
     {
         public int AnswerId{get; set; }
         public string Text{get; set; }=string.Empty; 
