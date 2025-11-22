@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using api.DAL;
-using api.Models;
 using api.DTOs;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+using api.Models;
 
 namespace api.Controllers
 {
@@ -12,102 +10,134 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class QuizController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly IQuizRepository _repo;
         private readonly ILogger<QuizController> _logger;
-        public QuizController(AppDbContext db, ILogger<QuizController> logger)
+
+        public QuizController(IQuizRepository repo, ILogger<QuizController> logger)
         {
-            _db = db;
-            _logger = logger; 
-        
+            _repo = repo;
+            _logger = logger;
         }
-        //----------- get all ----------
+
+        // Get all quizzes (public for guest mode)
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var quizzes = await _db.Quizzes
-                .Include(q => q.Category)
-                .Include(q => q.User)
-                .AsNoTracking()
-                .ToListAsync();
+            var quizzes = await _repo.GetAll();
+            if (quizzes == null)
+                return StatusCode(500, "Error retrieving quizzes.");
+
             return Ok(quizzes);
         }
 
-        //------------- get by id---------------
+        // Get quiz by ID (public for taking)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var quiz = await _db.Quizzes
-            .Include(q => q.Category)
-            .Include(q => q.Questions)
-                .ThenInclude(quiz => quiz.Answers)
-            .FirstOrDefaultAsync(quiz => quiz.QuizId == id);
-
+            var quiz = await _repo.GetQuizWithQuestions(id);
             if (quiz == null)
-                return NotFound(new {message = "the Quiz is not Found"});
+                return NotFound(new { message = "Quiz not found." });
+
             return Ok(quiz);
         }
-        //------ creating with innloging--------------
+
+        // Create quiz (auth required, includes category selection)
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] QuizCreateDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             var quiz = new Quiz
             {
                 Title = dto.Title,
-                Description = dto.Description, 
-                ImageUrl = dto.ImageUrl, 
-                CategoryId = dto.CategoryId, 
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
+                CategoryId = dto.CategoryId,
                 UserId = userId,
                 DateCreated = DateTime.UtcNow
             };
-            _db.Quizzes.Add(quiz);
-            await _db.SaveChangesAsync();
-            return Ok (new{message = " Quiz created successfully!!", quizId =quiz.QuizId});
 
+            var created = await _repo.Create(quiz);
+            if (created == null)
+                return StatusCode(500, "Error creating quiz.");
+
+            return Ok(new { message = "Quiz created successfully!", quizId = created.QuizId });
         }
-        //------update quiz, owner only-----------
+
+        // Update quiz (auth required)
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] QuizUpdateDto dto)
         {
-            var quiz = await _db.Quizzes.FindAsync(id);
-            if (quiz ==null)
-                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var quiz = await _repo.GetById(id);
+            if (quiz == null)
+                return NotFound(new { message = "Quiz not found." });
+
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             if (quiz.UserId != userId)
-                return Unauthorized(new {message="You dont have rights to Update this Quiz"});
-            
-            quiz.Title= dto.Title;
-            quiz.Description= dto.Description;
-            quiz.ImageUrl= dto.ImageUrl;
-            quiz.CategoryId= dto.CategoryId;
+                return Unauthorized(new { message = "You don't have rights to update this quiz." });
 
-            await _db.SaveChangesAsync();
-            return Ok(new { message= "Quiz updated!"});
+            quiz.Title = dto.Title;
+            quiz.Description = dto.Description;
+            quiz.ImageUrl = dto.ImageUrl;
+            quiz.CategoryId = dto.CategoryId;
 
+            var updated = await _repo.Update(quiz);
+            if (updated == null)
+                return StatusCode(500, "Error updating quiz.");
+
+            return Ok(new { message = "Quiz updated successfully!" });
         }
-        //----------delete quiz, owner only -----------¨
+
+        // Delete quiz (auth required)
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var quiz= await _db.Quizzes
-                .Include(q => q.Questions)
-                .ThenInclude(quiz => quiz.Answers)
-                .FirstOrDefaultAsync(quiz => quiz.QuizId == id);
-            
+            var quiz = await _repo.GetById(id);
             if (quiz == null)
-                return NotFound();
+                return NotFound(new { message = "Quiz not found." });
 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             if (quiz.UserId != userId)
-                return Unauthorized(new {message= "you dont have the rights to delete this quiz"});
+                return Unauthorized(new { message = "You don't have rights to delete this quiz." });
 
-            _db.Quizzes.Remove(quiz);
-            await _db.SaveChangesAsync();
-            return Ok(new{message= "Quiz deleted successfully!"});
+            var success = await _repo.Delete(id);
+            if (!success)
+                return StatusCode(500, "Error deleting quiz.");
+
+            return Ok(new { message = "Quiz deleted successfully!" });
         }
 
+        //  Submit quiz answers and calculate score 
+        [HttpPost("{id}/submit")]
+        public async Task<IActionResult> SubmitQuiz(int id, [FromBody] List<int> selectedAnswers)
+        {
+            var quiz = await _repo.GetQuizWithQuestions(id);
+            if (quiz == null)
+                return NotFound(new { message = "Quiz not found." });
+
+            if (selectedAnswers.Count != quiz.Questions.Count)
+                return BadRequest(new { message = "Invalid number of answers." });
+
+            int score = 0;
+            for (int i = 0; i < quiz.Questions.Count; i++)
+            {
+                var question = quiz.Questions[i];
+                var correctAnswer = question.Answers.FirstOrDefault(a => a.IsCorrect);
+                if (correctAnswer != null && selectedAnswers[i] == question.Answers.IndexOf(correctAnswer))
+                {
+                    score++;
+                }
+            }
+
+            return Ok(new { score, total = quiz.Questions.Count });
+        }
     }
 }

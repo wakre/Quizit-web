@@ -9,29 +9,26 @@ namespace api.Models
         public int UserId { get; set; }
 
         [Required]
-        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{2,40}",
-            ErrorMessage = "The name must be a numbers or letters between 2 to 40 characters.")]
+        [StringLength(40, MinimumLength = 2, ErrorMessage = "Username must be 2-40 characters.")]
+        [RegularExpression(@"^[0-9a-zA-ZæøåÆØÅ .\-]+$", ErrorMessage = "Username can only contain letters and numbers")]
         [Display(Name = "User Name")]
         public string UserName { get; set; } = string.Empty;
-
 
         [Required]
         [EmailAddress(ErrorMessage = "You must have a valid email")]
         [Display(Name = "Email Address")]
         public string Email { get; set; } = string.Empty;
-        
 
         [Required]
         [Display(Name = "Password Hash")]
         public string PasswordHash { get; set; } = string.Empty;
 
         [NotMapped]
-        [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ .\-]{9,40}",
-            ErrorMessage = "You need a strong password with minimum 9 characters!")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Password must contain at least one uppercase letter, and one digit.")]
         [Display(Name = "Password (input only)")]
         public string? Password { get; set; }
-        
-        public List<Quiz> Quizzes { get; set; } = new();
 
+        public List<Quiz> Quizzes { get; set; } = new();
     }
 }

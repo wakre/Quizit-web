@@ -5,11 +5,12 @@ namespace api.Models
     public class Category
     {
         [Key]
-        public int CategoryId { get; set; } // unique ID for the category
+        public int CategoryId { get; set; } // Unique ID for the category
 
         [Required(ErrorMessage = "Category name is required")]
-        public string Name { get; set; } = string.Empty; // category name
-        public List<Quiz> Quizzes { get; set; } = new();
+        [MaxLength(100)] // length limit
+        public string Name { get; set; } = string.Empty; // Category name
 
+        public List<Quiz> Quizzes { get; set; } = new();
     }
-} 
+}
