@@ -6,10 +6,9 @@ namespace api.DAL
     {
         Task<IEnumerable<Question>?> GetAll();
         Task<Question?> GetById(int questionId);
-        Task<bool> Create (Question question);
-        Task<bool> Update (Question question );
-        Task<bool> Delete (int questionId);
+        Task<Question?> Create(Question question);
+        Task<Question?> Update(Question question);
+        Task<bool> Delete(int questionId);
         Task<Question?> GetWithAnswers(int questionId);
-        
     }
 }

@@ -26,7 +26,7 @@ namespace api.DAL
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in GetAll");
+                _logger.LogError(e, "[QuestionRepository] Error in GetAll");
                 return null;
             }
         }
@@ -37,11 +37,12 @@ namespace api.DAL
             {
                 return await _db.Questions
                     .Include(q => q.Answers)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(q => q.QuestionId == questionId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in GetById");
+                _logger.LogError(e, "[QuestionRepository] Error in GetById");
                 return null;
             }
         }
@@ -53,42 +54,43 @@ namespace api.DAL
                 return await _db.Questions
                     .Include(q => q.Answers)
                     .Include(q => q.Quiz)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(q => q.QuestionId == questionId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in GetWithAnswers");
+                _logger.LogError(e, "[QuestionRepository] Error in GetWithAnswers");
                 return null;
             }
         }
 
-        public async Task<bool> Create(Question question)
+        public async Task<Question?> Create(Question question)
         {
             try
             {
                 _db.Questions.Add(question);
                 await _db.SaveChangesAsync();
-                return true;
+                return question;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in Create");
-                return false;
+                _logger.LogError(e, "[QuestionRepository] Error in Create");
+                return null;
             }
         }
 
-        public async Task<bool> Update(Question question)
+        public async Task<Question?> Update(Question question)
         {
             try
             {
                 _db.Questions.Update(question);
                 await _db.SaveChangesAsync();
-                return true;
+                return question;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in Update");
-                return false;
+                _logger.LogError(e, "[QuestionRepository] Error in Update");
+                return null;
             }
         }
 
@@ -108,7 +110,7 @@ namespace api.DAL
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error in Delete");
+                _logger.LogError(e, "[QuestionRepository] Error in Delete");
                 return false;
             }
         }
