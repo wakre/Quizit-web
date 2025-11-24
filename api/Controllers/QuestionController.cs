@@ -10,12 +10,14 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class QuestionController : ControllerBase
     {
-        private readonly IQuestionRepository _repo;
+        private readonly IQuestionRepository _repo;  // For question operations
+        private readonly IQuizRepository _quizRepo;  // NEW: For fetching quizzes
         private readonly ILogger<QuestionController> _logger;
-
-        public QuestionController(IQuestionRepository repo, ILogger<QuestionController> logger)
+        // UPDATED: Inject both repositories
+        public QuestionController(IQuestionRepository repo, IQuizRepository quizRepo, ILogger<QuestionController> logger)
         {
             _repo = repo;
+            _quizRepo = quizRepo;  // NEW
             _logger = logger;
         }
 
@@ -27,26 +29,25 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            
-            var quiz = await _repo.GetById(dto.QuizId); 
+            var quiz = await _quizRepo.GetQuizWithQuestions(dto.QuizId);
             if (quiz == null)
                 return NotFound(new { message = "Quiz not found." });
 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
-            if (quiz.UserId != userId)
+            if (quiz.UserId != userId)  // Now valid (no red line)
                 return Unauthorized(new { message = "You don't have access to add questions to this quiz." });
 
-            if (quiz.Questions.Count >= 10)
+            if (quiz.Questions.Count >= 10)  // Now valid (no red line)
                 return BadRequest(new { message = "Quiz cannot have more than 10 questions." });
 
-            var question = new Question
+            var question = new Question 
             {
-                Text = dto.Text,
+                 Text = dto.Text,
                 QuizId = dto.QuizId,
                 Answers = dto.Options.Select((opt, index) => new Answer
-                {
-                    Text = opt,
-                    IsCorrect = index == dto.CorrectOptionIndex
+            {
+                Text = opt,
+                IsCorrect = index == dto.CorrectOptionIndex
                 }).ToList()
             };
 
@@ -55,6 +56,7 @@ namespace api.Controllers
                 return StatusCode(500, "Error creating question.");
 
             return Ok(new { message = "Question added successfully!", questionId = created.QuestionId });
+        
         }
 
         // Update a question, (only owner) 

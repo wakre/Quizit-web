@@ -5,6 +5,7 @@ namespace api.DAL
     public interface IQuizRepository
     {
         Task<IEnumerable<Quiz>?> GetAll();
+        
         Task<Quiz?> GetById(int quizId);
         Task<Quiz?> Create(Quiz quiz);
         Task<Quiz?> Update(Quiz quiz);
