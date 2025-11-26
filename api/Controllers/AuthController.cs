@@ -25,7 +25,7 @@ namespace api.Controllers
             _logger = logger;
         }
 
-        // Register a new user
+        // Register a new user .
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
         {

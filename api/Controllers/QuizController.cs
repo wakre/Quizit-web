@@ -115,7 +115,7 @@ namespace api.Controllers
             return Ok(new { message = "Quiz deleted successfully!" });
         }
 
-        //  Submit quiz answers and calculate score 
+        //  Submit quiz answers and calculate score ! 
         [HttpPost("{id}/submit")]
         public async Task<IActionResult> SubmitQuiz(int id, [FromBody] List<int> selectedAnswers)
         {
