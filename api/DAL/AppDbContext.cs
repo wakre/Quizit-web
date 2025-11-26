@@ -54,6 +54,117 @@ namespace api.DAL
                 new Category { CategoryId = 5, Name = "Other" }
 
             );
+            //a sample user 
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    UserId= 1,
+                    UserName="TestUser",
+                    Email= "testUser@example.com",
+                    PasswordHash=BCrypt.Net.BCrypt.HashPassword("Password2025")
+                }
+             );
+            //a sample quiz 
+            modelBuilder.Entity<Quiz>().HasData(
+                new Quiz
+                {
+                    QuizId=1, 
+                    Title="Test your Math knowledge",
+                    Description="a simple math quiz to test your knowledge in Math, Good Luck!!",
+                    DateCreated= DateTime.UtcNow,
+                    UserId=1,
+                    CategoryId= 4 
+
+                }
+            );
+            // a sample question for quiz 1
+            modelBuilder.Entity<Question>().HasData(
+                new Question
+                {
+                    QuestionId =1, 
+                    Text= "What is 4 * 4 =??",
+                    QuizId = 1
+                },
+                new Question
+                {
+                    QuestionId =2, 
+                    Text= "What is 4 * 5 =??",
+                    QuizId = 1 
+                },
+                new Question
+                {
+                    QuestionId =3, 
+                    Text= "What is 5 * 5 =??",
+                    QuizId = 1 
+                }
+            );
+            // a sample answer
+            modelBuilder.Entity<Answer>().HasData(
+                new Answer
+                { //answers for question 1: 
+                    AnswerId= 1, 
+                    Text= "14",
+                    IsCorrect= false, 
+                    QuestionId=1
+                },
+                new Answer
+                {
+                    AnswerId= 2, 
+                    Text= "25",
+                    IsCorrect= false, 
+                    QuestionId=1
+                },
+                new Answer
+                {
+                    AnswerId= 3, 
+                    Text= "16",
+                    IsCorrect= true, 
+                    QuestionId=1
+                },
+                new Answer
+                {//answers for question 2: 
+                    AnswerId= 4, 
+                    Text= "14",
+                    IsCorrect= false, 
+                    QuestionId=2
+                },
+                new Answer
+                {
+                    AnswerId= 5, 
+                    Text= "20",
+                    IsCorrect= true, 
+                    QuestionId=2
+                },
+                 new Answer
+                {
+                    AnswerId= 6, 
+                    Text= "28",
+                    IsCorrect= false, 
+                    QuestionId=2
+                },
+                new Answer
+                { //answers for question 3: 
+                    AnswerId= 7, 
+                    Text= "55",
+                    IsCorrect= false, 
+                    QuestionId=3
+                },
+                new Answer
+                {
+                    AnswerId= 8, 
+                    Text= "28",
+                    IsCorrect= false, 
+                    QuestionId=3
+                },
+                new Answer
+                {
+                    AnswerId= 9, 
+                    Text= "25",
+                    IsCorrect= true, 
+                    QuestionId=3
+                }   
+            );
+
         }
     }
 }
