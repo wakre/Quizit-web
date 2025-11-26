@@ -4,7 +4,7 @@ using api.DAL;
 using api.DTOs;
 using api.Models;
 
-namespace api.Controllers
+namespace api.Controllers // fix strukturen for take (på slutten med submit), create (på starten)
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -55,7 +55,7 @@ namespace api.Controllers
                 Title = dto.Title,
                 Description = dto.Description,
                 ImageUrl = dto.ImageUrl,
-                CategoryId = dto.CategoryId,
+                CategoryId = dto.CategoryId, //sjekk om det kommer liste 
                 UserId = userId,
                 DateCreated = DateTime.UtcNow
             };
@@ -140,4 +140,4 @@ namespace api.Controllers
             return Ok(new { score, total = quiz.Questions.Count });
         }
     }
-}
+} //legg til take quiz modus 

@@ -34,15 +34,15 @@ namespace api.Controllers
                 return NotFound(new { message = "Quiz not found." });
 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
-            if (quiz.UserId != userId)  // Now valid (no red line)
+            if (quiz.UserId != userId) 
                 return Unauthorized(new { message = "You don't have access to add questions to this quiz." });
 
-            if (quiz.Questions.Count >= 10)  // Now valid (no red line)
+            if (quiz.Questions.Count >= 10)  
                 return BadRequest(new { message = "Quiz cannot have more than 10 questions." });
 
             var question = new Question 
             {
-                 Text = dto.Text,
+                Text = dto.Text,
                 QuizId = dto.QuizId,
                 Answers = dto.Options.Select((opt, index) => new Answer
             {
