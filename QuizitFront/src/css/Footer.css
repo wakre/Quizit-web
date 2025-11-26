@@ -1,14 +1,16 @@
 .footer {
-  height: 50px;
+  height: 40px;
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: #ffffff;
-  color: #333;
+  background-color:#0A3A60;
+  color: #FAF7F0;
   text-align: center;
+  position: fixed;
 }
 
 footer p {
   font-size: 17px;
-  margin-top: 10px;
+  opacity: 90%;
+  
 }

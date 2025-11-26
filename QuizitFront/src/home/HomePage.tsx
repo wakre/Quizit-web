@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Homepage: React.FC = () => {
   return (
+    <>
     <div className="text-center" style={{ marginTop: '100px' }}>
       <h1 className="display-4">Welcome to QUIZIT</h1>
       <p className="lead">Choose a mode to get started</p>
@@ -33,6 +34,8 @@ const Homepage: React.FC = () => {
         </div>
       </div>
     </div>
+    
+    </>
   );
 };
 

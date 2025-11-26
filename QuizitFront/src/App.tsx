@@ -6,19 +6,23 @@ import Homepage from './home/HomePage';
 import QuizList from './quizComponents/QuizList';
 import CreateQuiz from './quizComponents/CreateQuiz';
 import NavMenu from './shared/NavMenu';
+import Footer from './shared/Footer';
+import './App.css'
 
 const App: React.FC = () => {
   return (
-    <Container>
+    <Router>
       <NavMenu />
-      <Router>
+      <Container className="my-4"> 
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/QuizList" element={<QuizList />} />
           <Route path="/createQuiz" element={<CreateQuiz />} />
         </Routes>
-      </Router>
-    </Container>
+      </Container>
+      <Footer />
+    </Router>
+    
   );
 };
 

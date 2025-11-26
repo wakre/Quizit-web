@@ -1,10 +1,46 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+/* QuizIt Theme: Cream + Deep Blue*/
+
+:root{
+  --cream-bg: #FAF7F0;
+  --deep-blue: #0A3A60;
+  --text-charcoal: #1F1F1F;
 }
 
+body{
+  background-color: var(--cream-bg);
+  color: var(--text-charcoal);
+}
+
+.navbar {
+  background-color: var(--deep-blue) !important;
+}
+
+.navbar-brand {
+  color: var(--cream-bg) !important;
+  font-size: 1.7rem;
+}
+
+.nav-link{
+  color: var(--cream-bg) !important;
+
+}
+
+.nav-link:hover,
+.navbar-brand:hover {
+  opacity: 0.50;
+}
+
+.btn-primary {
+  background-color: var(--deep-blue);
+  border-color: var(--deep-blue);
+  color: var(--cream-bg);
+}
+
+.btn-primary:hover {
+  background-color: #0D4C7A; /* slightly lighter */
+  border-color: #0D4C7A;
+}
 .logo {
   height: 6em;
   padding: 1.5em;
