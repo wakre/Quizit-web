@@ -49,7 +49,10 @@ namespace api.DAL
             modelBuilder.Entity<Category>().HasData(
                 new Category { CategoryId = 1, Name = "Science" },
                 new Category { CategoryId = 2, Name = "Family" },
-                new Category { CategoryId = 3, Name = "Sports" }
+                new Category { CategoryId = 3, Name = "Sports" },
+                new Category { CategoryId = 4, Name = "Math" },
+                new Category { CategoryId = 5, Name = "Other" }
+
             );
         }
     }

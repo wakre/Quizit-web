@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen();
 
 // DB Context
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));  // Or UseSqlServer
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));  
 
 // Repositories
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
