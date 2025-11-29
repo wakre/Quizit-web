@@ -4,7 +4,7 @@ using api.DAL;
 using api.DTOs;
 using api.Models;
 
-namespace api.Controllers // fix strukturen for take (på slutten med submit), create (på starten)
+namespace api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -41,7 +41,7 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
             return Ok(quiz);
         }
 
-        // Create quiz (auth required, includes category selection)
+        // Create quiz (auth required)
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] QuizCreateDto dto)
@@ -50,12 +50,14 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
                 return BadRequest(ModelState);
 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
+
+            // Manuell mapping fra DTO til entity
             var quiz = new Quiz
             {
                 Title = dto.Title,
                 Description = dto.Description,
                 ImageUrl = dto.ImageUrl,
-                CategoryId = dto.CategoryId, //sjekk om det kommer liste 
+                CategoryId = dto.CategoryId,
                 UserId = userId,
                 DateCreated = DateTime.UtcNow
             };
@@ -64,6 +66,7 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
             if (created == null)
                 return StatusCode(500, "Error creating quiz.");
 
+            // Kommentar: Returnerer quizId til frontend
             return Ok(new { message = "Quiz created successfully!", quizId = created.QuizId });
         }
 
@@ -83,6 +86,7 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
             if (quiz.UserId != userId)
                 return Unauthorized(new { message = "You don't have rights to update this quiz." });
 
+            // Manuell mapping fra DTO til eksisterende entity
             quiz.Title = dto.Title;
             quiz.Description = dto.Description;
             quiz.ImageUrl = dto.ImageUrl;
@@ -92,6 +96,7 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
             if (updated == null)
                 return StatusCode(500, "Error updating quiz.");
 
+            // Kommentar: Returmelding for frontend
             return Ok(new { message = "Quiz updated successfully!" });
         }
 
@@ -112,10 +117,11 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
             if (!success)
                 return StatusCode(500, "Error deleting quiz.");
 
+            // Kommentar: Bekreftelse på sletting
             return Ok(new { message = "Quiz deleted successfully!" });
         }
 
-        //  Submit quiz answers and calculate score ! 
+        // Submit quiz answers and calculate score
         [HttpPost("{id}/submit")]
         public async Task<IActionResult> SubmitQuiz(int id, [FromBody] List<int> selectedAnswers)
         {
@@ -131,13 +137,16 @@ namespace api.Controllers // fix strukturen for take (på slutten med submit), c
             {
                 var question = quiz.Questions[i];
                 var correctAnswer = question.Answers.FirstOrDefault(a => a.IsCorrect);
+
+                // Kommentar: Sjekker hvert svar mot riktig svar
                 if (correctAnswer != null && selectedAnswers[i] == question.Answers.IndexOf(correctAnswer))
                 {
                     score++;
                 }
             }
 
+            // Kommentar: Returnerer score og total for frontend
             return Ok(new { score, total = quiz.Questions.Count });
         }
     }
-} //legg til take quiz modus 
+}

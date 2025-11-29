@@ -10,18 +10,18 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class QuestionController : ControllerBase
     {
-        private readonly IQuestionRepository _repo;  // For question operations
-        private readonly IQuizRepository _quizRepo;  // NEW: For fetching quizzes
+        private readonly IQuestionRepository _repo;
+        private readonly IQuizRepository _quizRepo;
         private readonly ILogger<QuestionController> _logger;
-        // UPDATED: Inject both repositories
+
         public QuestionController(IQuestionRepository repo, IQuizRepository quizRepo, ILogger<QuestionController> logger)
         {
             _repo = repo;
-            _quizRepo = quizRepo;  // NEW
+            _quizRepo = quizRepo;
             _logger = logger;
         }
 
-        // Create a question, (only owner) 
+        // CREATE: Legg til nytt spørsmål med 2–4 svar
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] QuestionCreateDto dto)
@@ -29,25 +29,28 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            // Hent quiz for å sjekke eierskap og antall spørsmål
             var quiz = await _quizRepo.GetQuizWithQuestions(dto.QuizId);
             if (quiz == null)
                 return NotFound(new { message = "Quiz not found." });
 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
-            if (quiz.UserId != userId) 
+            if (quiz.UserId != userId)
                 return Unauthorized(new { message = "You don't have access to add questions to this quiz." });
 
-            if (quiz.Questions.Count >= 10)  
+            if (quiz.Questions.Count >= 10)
                 return BadRequest(new { message = "Quiz cannot have more than 10 questions." });
 
-            var question = new Question 
+            // MANUELL MAPPING: DTO → Question entity
+            var question = new Question
             {
                 Text = dto.Text,
                 QuizId = dto.QuizId,
+                // Map hver option til Answer entity og sett riktig svar
                 Answers = dto.Options.Select((opt, index) => new Answer
-            {
-                Text = opt,
-                IsCorrect = index == dto.CorrectOptionIndex
+                {
+                    Text = opt,
+                    IsCorrect = index == dto.CorrectOptionIndex
                 }).ToList()
             };
 
@@ -55,11 +58,12 @@ namespace api.Controllers
             if (created == null)
                 return StatusCode(500, "Error creating question.");
 
+            // RETURNERER: QuestionId til frontend
             return Ok(new { message = "Question added successfully!", questionId = created.QuestionId });
-        
+            
         }
 
-        // Update a question, (only owner) 
+        // UPDATE: Oppdater eksisterende spørsmål
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] QuestionCreateDto dto)
@@ -75,8 +79,16 @@ namespace api.Controllers
             if (question.Quiz.UserId != userId)
                 return Unauthorized(new { message = "You don't have access to update this question." });
 
+            // MANUELL MAPPING: oppdater spørsmålstekst
             question.Text = dto.Text;
-            // Update answers (simplified)
+
+            // MANUELL MAPPING: oppdater alle svar og korrekt indeks
+            for (int i = 0; i < question.Answers.Count; i++)
+            {
+                question.Answers[i].Text = dto.Options[i];
+                question.Answers[i].IsCorrect = i == dto.CorrectOptionIndex;
+            }
+
             var updated = await _repo.Update(question);
             if (updated == null)
                 return StatusCode(500, "Error updating question.");
@@ -84,7 +96,7 @@ namespace api.Controllers
             return Ok(new { message = "Question updated successfully!" });
         }
 
-        // Delete a question, (only owner) 
+        // DELETE: Slett spørsmål (kun quiz-eier)
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -102,6 +114,30 @@ namespace api.Controllers
                 return StatusCode(500, "Error deleting question.");
 
             return Ok(new { message = "Question deleted successfully!" });
+        }
+
+        // GET: Hent spørsmål med svar (frontend)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var question = await _repo.GetWithAnswers(id);
+            if (question == null)
+                return NotFound(new { message = "Question not found." });
+
+            // MANUELL MAPPING: Question entity → QuestionDto for frontend
+            var questionDto = new QuestionDto
+            {
+                QuestionId = question.QuestionId,
+                Text = question.Text,
+                Answers = question.Answers.Select(a => new AnswerDto
+                {
+                    AnswerId = a.AnswerId,
+                    Text = a.Text,
+                    IsCorrect = a.IsCorrect
+                }).ToList()
+            };
+
+            return Ok(questionDto);
         }
     }
 }
