@@ -1,0 +1,24 @@
+/* src/components/QuizList.css */
+
+.quiz-card {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.quiz-card:hover {
+  opacity: 0.8;
+  transform: translateY(-5px);
+}
+
+/* Custom button color */
+.btn-details {
+  background-color: #0A3A60;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-details:hover {
+  background-color: #072746; /* litt mørkere på hover */
+  color: #fff;
+}

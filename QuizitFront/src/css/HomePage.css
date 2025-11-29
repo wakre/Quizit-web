@@ -1,0 +1,50 @@
+.homepage {
+  text-align: center;
+  margin-top: 100px;  /* Adjust if needed for spacing below NavMenu */
+}
+.homepage .row {
+  margin-top: 50px;
+}
+.homepage .quiz-main {
+  min-height: 100vh;
+  padding: 4em 2em;
+  position: relative;
+}
+
+.h1.display4{
+  font-family: 'Fredoka One',cursive;  /*bbly and thick */
+  font-size: 3rem;  
+  font-weight: 400;
+}
+
+.homepage .quiz-main p.lead {
+  font-family: inherit;  /* Use default, but make bolder */
+  font-weight: 600;  /* Slightly thicker than normal */
+  font-size: 1.2rem;  /* Smaller than h1 (default is ~1.25rem, adjust down) */
+}
+
+
+.homepage .quiz-main::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(250, 247, 240, 0.6); /* optional overlay */
+  z-index: 0;
+}
+.homepage .quiz-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+/*styling for homepage buttons*/
+.homepage-btn {
+  background-color: rgba(10, 58, 96, 0.7);  /* Semi-transparent deep blue */
+  border: 2px solid var(--deep-blue);  /* Subtle border for button recognition */
+  color: var(--cream-bg);  /* Text color for contrast */
+  transition: background-color 0.3s ease;  /* Smooth hover effect */
+}
+.homepage-btn:hover {
+  background-color: rgba(10, 58, 96, 0.9);  /* Less transparent on hover for better visibility */
+}

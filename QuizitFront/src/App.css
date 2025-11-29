@@ -12,6 +12,15 @@ body{
   color: var(--text-charcoal);
 }
 
+body.homepage-bg {
+  background-image: url('./assets/homepageBg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;  /* Ensure it covers the full viewport */
+  overflow: hidden;
+}
+
 .navbar {
   background-color: var(--deep-blue) !important;
 }
