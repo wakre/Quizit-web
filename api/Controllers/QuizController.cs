@@ -26,8 +26,22 @@ namespace api.Controllers
             var quizzes = await _repo.GetAll();
             if (quizzes == null)
                 return StatusCode(500, "Error retrieving quizzes.");
+            
+            //Quizdtos to populate quizzes
+            var quizDtos = quizzes.Select(q => new QuizDto
+            {
+                QuizId = q.QuizId,
+                Title = q.Title,
+                Description = q.Description,
+                ImageUrl = q.ImageUrl,
+                CategoryId = q.CategoryId,
+                CategoryName = q.Category?.Name ?? "Unknown",  // Flatten to string (no cycle)
+                UserId = q.UserId,
+                UserName = q.User?.UserName ?? "Unknown",     // Flatten to string (no cycle)
+                Questions = new List<QuestionDto>()           // Empty for list view; populate if needed
+            }).ToList();
 
-            return Ok(quizzes);
+            return Ok(quizDtos);
         }
 
         // Get quiz by ID (public for taking)
@@ -37,8 +51,31 @@ namespace api.Controllers
             var quiz = await _repo.GetQuizWithQuestions(id);
             if (quiz == null)
                 return NotFound(new { message = "Quiz not found." });
+            //some quizdto logic to get the data from dto not ef
+            var quizDto = new QuizDto
+            {
+                QuizId = quiz.QuizId,
+                Title = quiz.Title,
+                Description = quiz.Description,
+                ImageUrl = quiz.ImageUrl,
+                CategoryId = quiz.CategoryId,
+                CategoryName = quiz.Category?.Name ?? "Unknown",
+                UserId = quiz.UserId,
+                UserName = quiz.User?.UserName ?? "Unknown",
+                Questions = quiz.Questions?.Select(qst => new QuestionDto
+                {
+                    QuestionId = qst.QuestionId,
+                    Text = qst.Text,
+                    Answers = qst.Answers?.Select(ans => new AnswerDto
+                    {
+                        AnswerId = ans.AnswerId,
+                        Text = ans.Text,
+                        IsCorrect = ans.IsCorrect  // Include for quiz-taking; hide in list view if needed
+                    }).ToList() ?? new List<AnswerDto>()
+                }).ToList() ?? new List<QuestionDto>()
+            };
 
-            return Ok(quiz);
+            return Ok(quizDto);
         }
 
         // Create quiz (auth required)

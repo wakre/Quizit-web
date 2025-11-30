@@ -4,10 +4,12 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import Container from 'react-bootstrap/Container';
 import Homepage from './home/HomePage';
 import QuizList from './quizComponents/QuizList';
+import QuizDetails from './quizComponents/QuizDetails';
 import CreateQuiz from './quizComponents/CreateQuiz';
 import NavMenu from './shared/NavMenu';
 import Footer from './shared/Footer';
 import './App.css'
+
 
 const AppContent: React.FC =() => {
     const location = useLocation();
@@ -25,6 +27,7 @@ const AppContent: React.FC =() => {
         <Route path="/" element={<Homepage />} />
         <Route path="/QuizList" element={<Container className="my-4"><QuizList /></Container>} />
         <Route path="/CreateQuiz" element={<Container className="my-4"><CreateQuiz /></Container>} />
+        <Route path="/quiz/:id" element={<Container className="my-4"><QuizDetails /></Container>} />
       </Routes>
       <Footer />
     </>

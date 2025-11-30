@@ -12,6 +12,24 @@ dist
 dist-ssr
 *.local
 
+#build folder
+/obj/*
+/bin/*
+/api/obj
+/api/bin/
+/api/debug
+
+# NuGet
+project.nuget.cache
+*.nuget.g.*
+
+# Visual Studio specific
+*.user
+*.suo
+*.cache
+
+*.sln
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

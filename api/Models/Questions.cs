@@ -38,7 +38,7 @@ namespace api.Models
                     new[] { nameof(Answers) });
             }
 
-            if (!Answers.Any(a => a.IsCorrect)) //sjekk det ???????
+            if (!Answers!.Any(a => a.IsCorrect)) //sjekk det ???????
             {
                 yield return new ValidationResult("Each question must have at least one correct answer.",
                     new[] { nameof(Answers) });
