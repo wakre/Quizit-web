@@ -24,17 +24,17 @@ namespace api.Controllers
             _logger = logger;
         }
 
-        // REGISTER A USER (Manual mapping DTO -> Entity)
+        // FOR REGISTER A USER (Manual mapping DTO -> Entity)
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Check duplicate email
+            // Check duplicate emails
             var existingUser = _db.Users.FirstOrDefault(u => u.Email == dto.Email);
             if (existingUser != null)
-                return BadRequest(new { message = "This email is already in use." });
+                return BadRequest(new { message = "This email is already in use !!" });
 
             // MANUAL MAPPING: UserRegisterDto -> User Entity
             var user = new User
