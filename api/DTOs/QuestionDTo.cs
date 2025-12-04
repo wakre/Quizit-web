@@ -4,6 +4,7 @@ namespace api.DTOs
     {
         public int QuestionId { get; set; }
         public string Text { get; set; } = string.Empty;
+        public int UserId { get; set; }
         public List<AnswerDto> Answers { get; set; } = new();
     }
 }

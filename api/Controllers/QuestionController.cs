@@ -129,6 +129,7 @@ namespace api.Controllers
             {
                 QuestionId = question.QuestionId,
                 Text = question.Text,
+                UserId = question.Quiz.UserId,
                 Answers = question.Answers.Select(a => new AnswerDto
                 {
                     AnswerId = a.AnswerId,

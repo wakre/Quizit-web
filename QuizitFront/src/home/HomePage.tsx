@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import '../css/HomePage.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 const Homepage: React.FC = () => {
   return (
     <div className="homepage quiz-main">
@@ -17,7 +16,12 @@ const Homepage: React.FC = () => {
               <Link
                 to="/QuizList"
                 className="btn btn-success btn-lg w-100 homepage-btn"
-                style={{ height: '100px', paddingTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                style={{
+                  height: '100px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
               >
                 View Available Quizzes
               </Link>
@@ -26,7 +30,12 @@ const Homepage: React.FC = () => {
               <Link
                 to="/CreateQuiz"
                 className="btn btn-primary btn-lg w-100 homepage-btn"
-                style={{ height: '100px', paddingTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                style={{
+                  height: '100px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
               >
                 Create Your Own Quiz
               </Link>
@@ -35,7 +44,6 @@ const Homepage: React.FC = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 
