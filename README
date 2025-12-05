@@ -22,3 +22,25 @@ To run the frontend, navigate to the '' folder and use the command:
 npm run dev
 
 This will start the frontend on localhost:5173.
+
+
+
+Steps to test the backend functionality:
+
+1. Open a terminal.
+
+2. Navigate to the API folder using cd api.
+
+3. Run dotnet build.
+
+4. Start the application with dotnet run.
+
+5. Open the localhost link in your browser and append /swagger to the URL.
+
+6. You can now test the endpoints that don’t require owner authorization.
+
+7. To test all endpoints, register a new user.
+
+8. Log in, you will receive a token. Paste this token into the Authorize button to gain access to protected endpoints.
+
+9. You can now test all functions.
