@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Quiz } from '../types/Quiz';
+import { Question } from '../types/Question';
 
+/*
 interface Quiz {
   QuizId: number;
   Title: string;
@@ -12,6 +15,7 @@ interface Question {
   Text: string;
   Answers: { AnswerId: number; Text: string; IsCorrect: boolean }[];
 }
+*/
 
 const TakeQuiz: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +26,8 @@ const TakeQuiz: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+
+  // fetching the quiz questions to answer
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
@@ -51,6 +57,8 @@ const TakeQuiz: React.FC = () => {
     }
   };
 
+
+  //error handling for unanswered questions
   const handleSubmit = async () => {
     if (selectedAnswers.includes(-1)) {
       alert('Please answer all questions.');
