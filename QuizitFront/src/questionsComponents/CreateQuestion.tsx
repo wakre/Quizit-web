@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { createQuestion } from './QuestionServices';
+
 
 const CreateQuestion: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
@@ -27,6 +29,11 @@ const CreateQuestion: React.FC = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
+
+    if (!token){
+      setError('Uou must be logged in');
+      return
+    }
     if (correctOption === '') {
       setError('Please select the correct answer.');
       return;
@@ -34,7 +41,18 @@ const CreateQuestion: React.FC = () => {
 
     const correctOptionIndex = Number(correctOption) - 1;
 
+
     try {
+      await createQuestion(
+        {
+          text,
+          quizId: Number(quizId),
+          options,
+          correctOptionIndex
+        },
+        token
+      );
+      /*  moved the api call to service
       const response = await fetch('/api/question', {
         method: 'POST',
         headers: {
@@ -50,11 +68,12 @@ const CreateQuestion: React.FC = () => {
       });
 
       if (!response.ok) throw new Error('Failed to add question');
-
+      */
       alert('Question added! Add another or go back.');
       setText('');
       setOptions(['', '']); // reset to 2 options
       setCorrectOption('');
+      setError('');
     } catch (err: any) {
       setError(err.message || 'Failed to add question');
     }
