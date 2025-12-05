@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import Container from 'react-bootstrap/Container';
+
 import Homepage from './home/HomePage';
 import QuizList from './quizComponents/QuizList';
 import QuizDetails from './quizComponents/QuizDetails';

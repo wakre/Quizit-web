@@ -133,7 +133,7 @@ const QuizDetails: React.FC = () => {
               className="btn btn-warning me-2"
               onClick={() => {
                 if (!isOwner)
-                  return alert("Only the quiz owner can update this quiz.");
+                  return alert("Only the quiz owner can update this quiz. please login to edit your quiz");
                 navigate(`/UpdateQuiz/${quiz.QuizId}`);
               }}
             >
@@ -144,7 +144,7 @@ const QuizDetails: React.FC = () => {
               className="btn btn-danger"
               onClick={() => {
                 if (!isOwner)
-                  return alert("Only the quiz owner can delete this quiz.");
+                  return alert("Only the quiz owner can delete this quiz. please log in to delete your quiz");
                 navigate(`/DeleteQuiz/${quiz.QuizId}`)
               }}
               
@@ -171,7 +171,7 @@ const QuizDetails: React.FC = () => {
                     className="btn btn-sm btn-warning me-2"
                     onClick={() => {
                       if (!isOwner)
-                        return alert("Only the quiz owner can edit questions.");
+                        return alert("Only the quiz owner can edit questions. please log in to edit the question on your quiz");
                       navigate(`/UpdateQuestion/${q.QuestionId}`);
                     }}
                   >
@@ -182,7 +182,7 @@ const QuizDetails: React.FC = () => {
                     className="btn btn-sm btn-danger"
                     onClick={() => {
                       if (!isOwner)
-                        return alert("Only the quiz owner can delete questions.");
+                        return alert("Only the quiz owner can delete questions. please log in to delete the question on your quiz");
                       navigate(`/DeleteQuestion/${q.QuestionId}`)
                     }}
                   >

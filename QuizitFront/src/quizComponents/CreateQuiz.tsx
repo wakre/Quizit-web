@@ -91,6 +91,10 @@ const CreateQuiz: React.FC = () => {
 
   return (
     <div className="container mt-5">
+      <button className="btn btn-secondary mb-3" onClick={() => navigate("/")}>
+        ← Back to Homepage
+      </button>
+
       <h2>Create Quiz</h2>
 
       <form onSubmit={handleSubmit}>

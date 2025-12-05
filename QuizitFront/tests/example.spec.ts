@@ -11,7 +11,7 @@ test('play a quiz regardless of its questions', async ({ page }) => {
   await page.getByRole('button', { name: /view details/i }).first().click();
 
   // Start quiz
-  await page.getByRole('button', { name: /take quiz/i }).click();
+  await page.getByRole('button', { name: /PLAY QUIZ/i }).click();
 
   // Loop through quiz questions until "Submit Quiz" appears
   while (true) {
