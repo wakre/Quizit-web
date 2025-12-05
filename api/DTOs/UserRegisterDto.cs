@@ -13,7 +13,7 @@ namespace api.DTOs
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters.")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters.")] // Password for the user, must be min 8 characters
         public string Password { get; set; } = string.Empty;
     }
 }

@@ -2,7 +2,7 @@ namespace api.DTOs
 {
     public class QuestionDto
     {
-        public int QuestionId { get; set; }
+        public int QuestionId { get; set; } 
         public string Text { get; set; } = string.Empty;
         public int UserId { get; set; }
         public List<AnswerDto> Answers { get; set; } = new();

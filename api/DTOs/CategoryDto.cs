@@ -2,7 +2,7 @@ namespace api.DTOs
 {
     public class CategoryDto
     {
-        public int CategoryId { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public int CategoryId { get; set; } // Unique identifier for the answer
+        public string Name { get; set; } = string.Empty; 
     }
 }
