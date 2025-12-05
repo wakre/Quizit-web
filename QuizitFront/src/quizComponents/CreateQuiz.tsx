@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { Category } from '../types/Category';
+import { createQuiz,getCategories } from './QuizServices';
 
+
+/*
 interface Category {
   CategoryId: number;
-  Name: string;
-}
+  Name: string;*/
+
 
 const CreateQuiz: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -20,9 +24,13 @@ const CreateQuiz: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        const data= await getCategories();
+        /*
+        removed fetch into a service api call:
         const response = await fetch('/api/category');
         if (!response.ok) throw new Error('Failed to load categories');
         const data = await response.json();
+        */
         setCategories(data);
       } catch (err: any) {
         setError(err.message);
@@ -43,7 +51,18 @@ const CreateQuiz: React.FC = () => {
     // Convert imageUrl to null if user leaves it empty (cleaner for backend)
     const imageToSend = imageUrl.trim() === '' ? null : imageUrl.trim();
 
+
+    //creating the quiz
     try {
+      
+      const data = await createQuiz({
+        title: title.trim(),
+        description: description.trim(),
+        imageUrl: imageToSend,
+        categoryId: Number(categoryId),
+      }, token);
+
+      /* moved into services 
       const response = await fetch('/api/quiz', {
         method: 'POST',
         headers: {
@@ -61,6 +80,7 @@ const CreateQuiz: React.FC = () => {
       if (!response.ok) throw new Error('Failed to create quiz');
 
       const data = await response.json();
+      */
 
       navigate(`/CreateQuestion/${data.quizId}`);
 

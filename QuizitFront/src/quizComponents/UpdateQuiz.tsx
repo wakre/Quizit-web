@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { Quiz } from "../types/Quiz";
+import { Question } from "../types/Question";
+import { Category } from "../types/Category";
+import { getQuiz, updateQuiz, getCategories, addQuestion } from "./QuizServices";
 
+/*
 interface Category {
   CategoryId: number;  // Match API capitalization
   Name: string;
@@ -22,7 +27,7 @@ interface Quiz {
   UserId: number;  // Match API
   Questions: Question[];
 }
-
+*/
 const UpdateQuiz: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -46,11 +51,15 @@ const UpdateQuiz: React.FC = () => {
   useEffect(() => {
     const loadQuiz = async () => {
       try {
+        const data = await getQuiz(id!);
+        
+        /*
         const res = await fetch(`/api/quiz/${id}`);
         if (!res.ok) throw new Error("Failed to load quiz");
 
         const data: Quiz = await res.json();
-        if (user && data.UserId !== Number(user.userId)) {
+        */
+        if (user && data.UserId !== (user.userId)) {
           alert("You are not the owner of this quiz.");
           navigate(`/quiz/${id}`);
           return;
@@ -69,9 +78,17 @@ const UpdateQuiz: React.FC = () => {
     };
 
     const loadCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (err: any) {
+        setError(err.message);
+      }
+      /*
       const res = await fetch("/api/category");
       const data = await res.json();
       setCategories(data);
+      */
     };
 
     if (id) {
@@ -85,6 +102,13 @@ const UpdateQuiz: React.FC = () => {
     if (!token) return navigate("/login");
 
     try {
+      await updateQuiz(id!, {
+        Title: title,
+        Description: description,
+        ImageUrl: imageUrl.trim() === '' ? null : imageUrl.trim(),  // Always include, default to null if empty
+        CategoryId: Number(categoryId),
+      }, token);
+      /*
       const body: any = {
         Title: title,
         Description: description,  // Always send (empty string is fine)
@@ -103,7 +127,7 @@ const UpdateQuiz: React.FC = () => {
       });
 
       if (!res.ok) throw new Error("Update failed");
-
+      */
       alert("Quiz updated successfully!");
       window.location.reload();  // Refresh to show changes
     } catch (err: any) {
@@ -111,13 +135,20 @@ const UpdateQuiz: React.FC = () => {
     }
   };
 
-  const addQuestion = async () => {
+  const handleAddQuestion = async () => {
     if (!newQuestionText || newCorrectIndex === null || newOptions.some(opt => !opt)) {
       setError("Please fill all fields for the new question.");
       return;
     }
 
     try {
+      await addQuestion({
+        QuizId: id!,
+        Text: newQuestionText,
+        Options: newOptions,
+        CorrectOptionIndex: newCorrectIndex,
+      }, token!);
+      /* 
       const res = await fetch("/api/question", {
         method: "POST",
         headers: {
@@ -133,7 +164,7 @@ const UpdateQuiz: React.FC = () => {
       });
 
       if (!res.ok) throw new Error("Failed to add question");
-
+      */
       alert("Question added!");
       setShowAddQuestion(false);
       setNewQuestionText("");
@@ -290,7 +321,7 @@ const UpdateQuiz: React.FC = () => {
               Add Option
             </button>
           )}
-          <button className="btn btn-primary" onClick={addQuestion}>
+          <button className="btn btn-primary" onClick={handleAddQuestion}>
             Add Question
           </button>
         </div>

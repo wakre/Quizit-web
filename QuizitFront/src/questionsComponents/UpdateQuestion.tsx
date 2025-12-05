@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-
+import { getQuestion, updateQuestion } from "./QuestionServices";
+import { Question } from "../types/Question";
+import { Answer } from "../types/Answer";
+/*
 interface Answer {
   AnswerId: number;
   Text: string;
@@ -13,7 +16,7 @@ interface Question {
   Text: string;
   UserId: number;  // Added for ownership check
   Answers: Answer[];
-}
+}*/
 
 const UpdateQuestion: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,11 +33,13 @@ const UpdateQuestion: React.FC = () => {
   useEffect(() => {
     const loadQuestion = async () => {
       try {
+        /*
         const res = await fetch(`/api/question/${id}`);
         if (!res.ok) throw new Error("Failed to load question");
         const q: Question = await res.json();
-
-        if (user && q.UserId !== Number(user.userId)) {
+          */
+         const q= await getQuestion(id!);
+        if (user && q.UserId !== (user.userId)) {
           alert("You are not the owner of this question.");
           navigate(-1);
           return;
@@ -75,6 +80,12 @@ const UpdateQuestion: React.FC = () => {
     }
 
     try {
+      await updateQuestion(id!, {
+        Text:text,
+        Options:options,
+        CorrectOptionIndex: correctIndex,
+      }, token!);
+      /*
       const res = await fetch(`/api/question/${id}`, {
         method: "PUT",
         headers: {
@@ -89,7 +100,7 @@ const UpdateQuestion: React.FC = () => {
       });
 
       if (!res.ok) throw new Error("Failed to update question");
-
+      */
       alert("Question updated successfully!");
       navigate(-1);
     } catch (err: any) {

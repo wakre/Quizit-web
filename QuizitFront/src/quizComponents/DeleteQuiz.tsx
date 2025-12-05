@@ -1,15 +1,18 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from '../auth/AuthContext';
+import { Quiz } from "../types/Quiz";
+import { getQuiz,deleteQuiz } from "./QuizServices";
 
+/*
 interface Quiz {
   QuizId: number;
   Title: string;
   UserId: number;  // Match API
 }
-
+*/
 const DeleteQuiz = () => {
-  const { id } = useParams();
+  const { id } = useParams<{id: string}>();
   const navigate = useNavigate();
   const { token, user } = useAuth();
 
@@ -18,34 +21,39 @@ const DeleteQuiz = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/quiz/${id}`)
-      .then(res => res.json())
-      .then((data: Quiz) => {
-        if (user && data.UserId !== Number(user.userId)) {
+    const loadQuiz = async () => {
+      try {
+        const data = await getQuiz(id!);
+        if (user && data.UserId !== (user.userId)) {
           alert("You are not the owner of this quiz.");
           navigate(`/quiz/${id}`);
           return;
         }
         setQuiz(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
         setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setError("Failed to load quiz.");
-        setLoading(false);
-      });
+      }
+    };
+    if (id) loadQuiz();
   }, [id, user, navigate]);
 
-  const deleteQuiz = async () => {
+  
+
+  const handleDelete = async () => {
     if (!token) {
       navigate('/Login');
       return;
     }
     try {
+      await deleteQuiz(id!, token);
+      /*
       await fetch(`/api/quiz/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
+      */
       alert("Quiz deleted successfully!");
       navigate("/QuizList");
     } catch (err) {
@@ -64,7 +72,7 @@ const DeleteQuiz = () => {
       <p>
         Are you sure you want to delete <strong>{quiz.Title}</strong>?
       </p>
-      <button className="btn btn-danger me-2" onClick={deleteQuiz}>
+      <button className="btn btn-danger me-2" onClick={handleDelete}>
         Delete
       </button>
       <button className="btn btn-secondary" onClick={() => navigate(-1)}>

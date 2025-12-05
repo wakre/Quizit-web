@@ -1,6 +1,6 @@
-// src/App.tsx
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import './App.css';
 import Container from 'react-bootstrap/Container';
 import Homepage from './home/HomePage';
 import QuizList from './quizComponents/QuizList';
@@ -10,16 +10,16 @@ import TakeQuiz from './quizComponents/TakeQuiz';
 import QuizResults from './quizComponents/QuizResults';
 import NavMenu from './shared/NavMenu';
 import Footer from './shared/Footer';
-import './App.css'
 import Login from './auth/LogIn';
 import Register from './auth/Register';
 import CreateQuestion from './questionsComponents/CreateQuestion';
-import { AuthProvider } from './auth/AuthContext';
-import { ProtectedRoute } from './auth/ProtectedRoute';
 import UpdateQuiz from './quizComponents/UpdateQuiz';
 import UpdateQuestion from './questionsComponents/UpdateQuestion';
 import DeleteQuiz from './quizComponents/DeleteQuiz';
 import DeleteQuestion from './questionsComponents/DeleteQuestion';
+
+import { AuthProvider } from './auth/AuthContext';
+import { ProtectedRoute } from './auth/ProtectedRoute';
 
 const AppContent: React.FC =() => {
     const location = useLocation();
