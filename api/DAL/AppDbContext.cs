@@ -3,16 +3,18 @@ using api.Models;
 
 namespace api.DAL
 {
+    // The application's database context. Handles database connections
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
+        // Represents database tables for each entity model.
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Category> Categories { get; set; }
-
+        
+        // Configures relationships, constraints, and seed data for the database.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -45,7 +47,7 @@ namespace api.DAL
                 .HasForeignKey(q => q.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict); // Prevents deleting categories with quizzes
 
-            // Seed initial categories (for demo)
+            // Seed initial categories 
             modelBuilder.Entity<Category>().HasData(
                 new Category { CategoryId = 1, Name = "Science" },
                 new Category { CategoryId = 2, Name = "Family" },

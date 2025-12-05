@@ -21,7 +21,8 @@ namespace api.Controllers
             _logger = logger;
         }
 
-        // CREATE: Legg til nytt spørsmål med 2–4 svar
+        // ------------Create Question-------------
+        //only the owner of the quiz can create question with 2- 4 answer options 
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] QuestionCreateDto dto)
@@ -29,24 +30,23 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Hent quiz for å sjekke eierskap og antall spørsmål
+            // Load quiz to validate ownership and questions limit 
             var quiz = await _quizRepo.GetQuizWithQuestions(dto.QuizId);
             if (quiz == null)
                 return NotFound(new { message = "Quiz not found." });
-
+            //Ensure taht only the owner can  modify the quiz 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             if (quiz.UserId != userId)
                 return Unauthorized(new { message = "You don't have access to add questions to this quiz." });
-
+            //A quiz is limited to 10 questions. 
             if (quiz.Questions.Count >= 10)
                 return BadRequest(new { message = "Quiz cannot have more than 10 questions." });
 
-            // MANUELL MAPPING: DTO → Question entity
+            // manual mapping: DTO → Question entity with generated answer entites
             var question = new Question
             {
                 Text = dto.Text,
                 QuizId = dto.QuizId,
-                // Map hver option til Answer entity og sett riktig svar
                 Answers = dto.Options.Select((opt, index) => new Answer
                 {
                     Text = opt,
@@ -63,7 +63,9 @@ namespace api.Controllers
             
         }
 
-        // UPDATE: Oppdater eksisterende spørsmål
+        // --------------Update Question--------------
+        //only the owner of this quiz can edit the questions and options  
+
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] QuestionCreateDto dto)
@@ -74,15 +76,15 @@ namespace api.Controllers
             var question = await _repo.GetWithAnswers(id);
             if (question == null)
                 return NotFound(new { message = "Question not found." });
-
+            //ensure quiz owner 
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             if (question.Quiz.UserId != userId)
                 return Unauthorized(new { message = "You don't have access to update this question." });
 
-            // MANUELL MAPPING: oppdater spørsmålstekst
+            // Manual mapping: update question text 
             question.Text = dto.Text;
 
-            // MANUELL MAPPING: oppdater alle svar og korrekt indeks
+            // Maunal mapping: update the answer options 
             for (int i = 0; i < question.Answers.Count; i++)
             {
                 question.Answers[i].Text = dto.Options[i];
@@ -96,7 +98,8 @@ namespace api.Controllers
             return Ok(new { message = "Question updated successfully!" });
         }
 
-        // DELETE: Slett spørsmål (kun quiz-eier)
+        // --------------Delete questiion-------------
+        //only the owner of the quiz can delete the questions 
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -116,7 +119,7 @@ namespace api.Controllers
             return Ok(new { message = "Question deleted successfully!" });
         }
 
-        // GET: Hent spørsmål med svar (frontend)
+        //GET QUESTION BY ID – returns question text and answers for frontend display
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -124,7 +127,7 @@ namespace api.Controllers
             if (question == null)
                 return NotFound(new { message = "Question not found." });
 
-            // MANUELL MAPPING: Question entity → QuestionDto for frontend
+            // Manual mapping: entity -> DTO 
             var questionDto = new QuestionDto
             {
                 QuestionId = question.QuestionId,

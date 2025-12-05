@@ -24,34 +24,35 @@ namespace api.Controllers
             _logger = logger;
         }
 
-        // FOR REGISTER A USER (Manual mapping DTO -> Entity)
+        // -------------Register a new user--------------
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Check duplicate emails
+            // Check duplicate emails, and return a n error message is it the mail is duplicated
             var existingUser = _db.Users.FirstOrDefault(u => u.Email == dto.Email);
             if (existingUser != null)
                 return BadRequest(new { message = "This email is already in use !!" });
 
-            // MANUAL MAPPING: UserRegisterDto -> User Entity
+            // Manual Mapping : UserRegisterDto -> User Entity
             var user = new User
             {
                 UserName = dto.UserName,
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password) // Hash password
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password) //  password hashing 
             };
 
             try
             {
+                //save new user in database 
                 _db.Users.Add(user);
                 await _db.SaveChangesAsync();
 
                 _logger.LogInformation("User registered: {email}", dto.Email);
 
-                // MANUAL MAPPING: User Entity -> UserDto (returns basic profile info)
+                // returns basic profile info 
                 var userDto = new UserDto
                 {
                     UserId = user.UserId,
@@ -72,23 +73,23 @@ namespace api.Controllers
             }
         }
 
-        // LOGIN AND RETURN TOKEN + USER INFO
+        // Login User AND RETURN JWT TOKEN 
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserLoginDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
+            //look for user by the email and verify the password 
             var user = _db.Users.FirstOrDefault(u => u.Email == dto.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized(new { message = "Invalid email or password." });
 
-            // Generate JWT
+            // Generate JWT Token 
             string token = GenerateJwtToken(user);
 
             _logger.LogInformation("User logged in: {email}", dto.Email);
 
-            // MANUAL MAPPING: User -> UserDto
+            // Mapping entity: User -> UserDto
             var userDto = new UserDto
             {
                 UserId = user.UserId,
@@ -109,7 +110,7 @@ namespace api.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Claims manually mapped from User entity
+            // Claims that will be stored in the token 
             var claims = new[]
             {
                 new Claim("userId", user.UserId.ToString()),

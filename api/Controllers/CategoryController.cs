@@ -16,7 +16,7 @@ namespace api.Controllers
             _db = db;
         }
 
-        // Get all categories (manual mapping to DTO)
+        // Get all categories 
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {

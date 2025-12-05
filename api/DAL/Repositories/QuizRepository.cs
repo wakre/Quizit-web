@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.DAL
 {
+ // Repository responsible for all data operations related to Quiz entities.
+// Implements IQuizRepository and uses EF Core to interact with the database.
     public class QuizRepository : IQuizRepository
     {
         private readonly AppDbContext _db;
@@ -14,7 +16,7 @@ namespace api.DAL
             _db = db;
             _logger = logger;
         }
-
+        // Retrieves all quizzes including related category
         public async Task<IEnumerable<Quiz>?> GetAll()
         {
             try
@@ -33,7 +35,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Retrieves a quiz by ID.
         public async Task<Quiz?> GetById(int quizId)
         {
             try
@@ -50,7 +52,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Retrieves a quiz with all related questions and options/answer 
         public async Task<Quiz?> GetQuizWithQuestions(int quizId)
         {
             try
@@ -69,7 +71,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Creates a new quiz in the database.
         public async Task<Quiz?> Create(Quiz quiz)
         {
             try
@@ -84,7 +86,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Updates an existing quiz.
         public async Task<Quiz?> Update(Quiz quiz)
         {
             try
@@ -99,7 +101,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Deletes a quiz and all its related questions and options/answers
         public async Task<bool> Delete(int quizId)
         {
             try
@@ -122,7 +124,7 @@ namespace api.DAL
                 return false;
             }
         }
-
+        // Retrieves all quizzes created by a specific user.
         public async Task<IEnumerable<Quiz>?> GetQuizzesByUser(int userId)
         {
             try

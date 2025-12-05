@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.DAL
 {
+   // Repository responsible for all data operations related to Question entities.
+   // Implements IQuestionRepository and uses EF Core through AppDbContext.
     public class QuestionRepository : IQuestionRepository
     {
         private readonly AppDbContext _db;
@@ -14,7 +16,7 @@ namespace api.DAL
             _db = db;
             _logger = logger;
         }
-
+       // Retrieves all questions with their related options
         public async Task<IEnumerable<Question>?> GetAll()
         {
             try
@@ -30,7 +32,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Retrieves a single question by ID including its options.
         public async Task<Question?> GetById(int questionId)
         {
             try
@@ -46,7 +48,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+    // Retrieves a question together with its options and the related quiz.
         public async Task<Question?> GetWithAnswers(int questionId)
         {
             try
@@ -63,7 +65,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+         // Adds a new question to the database.
         public async Task<Question?> Create(Question question)
         {
             try
@@ -78,7 +80,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Updates an existing question.
         public async Task<Question?> Update(Question question)
         {
             try
@@ -93,7 +95,7 @@ namespace api.DAL
                 return null;
             }
         }
-
+        // Delete a question including its related options.
         public async Task<bool> Delete(int questionId)
         {
             try
