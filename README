@@ -23,7 +23,8 @@ npm run dev
 
 This will start the frontend on localhost:5173.
 
-
+If the front-end is not running try this command: 
+npm install
 
 Steps to test the backend functionality:
 
