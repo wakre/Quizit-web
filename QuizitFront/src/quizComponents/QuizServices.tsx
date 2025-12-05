@@ -1,9 +1,8 @@
-// src/services/QuizService.ts
 import { Quiz } from '../types/Quiz'; 
 import { Category } from '../types/Category';
 import { Question } from '../types/Question';
 
-const API_BASE = '/api';  // Base URL for your API
+const API_BASE = '/api';  // Base URL for the API
 
 // Fetch all quizzes
 export const getQuizzes = async (): Promise<Quiz[]> => {

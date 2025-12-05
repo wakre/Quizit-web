@@ -15,6 +15,8 @@ const CreateQuestion: React.FC = () => {
     if (options.length < 4) setOptions([...options, '']);
   };
 
+
+  //error handling on removal
   const removeOption = (index: number) => {
     if (options.length <= 2) return; // must have at least 2
     const newOptions = options.filter((_, i) => i !== index);
@@ -25,6 +27,7 @@ const CreateQuestion: React.FC = () => {
     setOptions(newOptions);
   };
 
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token');

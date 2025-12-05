@@ -41,10 +41,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const isAuthenticated = !!token;
 
-  useEffect(() => {
-    // Optional: Validate token on app load (e.g., check expiry)
-  }, []);
-
   return (
     <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>
       {children}

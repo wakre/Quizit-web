@@ -91,6 +91,7 @@ const CreateQuiz: React.FC = () => {
 
   return (
     <div className="container mt-5">
+      {/* A button to return to homepage in case the user does not want to create a quiz anymore.  */}
       <button className="btn btn-secondary mb-3" onClick={() => navigate("/")}>
         ← Back to Homepage
       </button>
@@ -133,7 +134,7 @@ const CreateQuiz: React.FC = () => {
           />
         </div>
 
-        {/* CATEGORY */}
+        {/* CATEGORY - selected from list from backend */}
         <div className="mb-3">
           <label>Category</label>
           <select

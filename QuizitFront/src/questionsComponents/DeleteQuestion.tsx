@@ -26,7 +26,7 @@ const DeleteQuestion: React.FC = () => {
       try {
         const data = await getQuestion(id!);
 
-        /*
+        /* old fetch function moved to service
         const res = await fetch(`/api/question/${id}`);
         if (!res.ok) throw new Error('Failed to load question');
         const data: Question = await res.json();

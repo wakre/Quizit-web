@@ -49,7 +49,7 @@ test('play a quiz regardless of its questions', async ({ page }) => {
 });
 
 
-
+// testing the quiz taking mode using a testuser 
 test('create quiz flow', async ({ page }) => {
    await page.goto('http://localhost:5173');
   // Go to Create Your Own Quiz → triggers redirect to login

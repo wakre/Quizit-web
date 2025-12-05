@@ -1,4 +1,3 @@
-// src/services/QuestionService.ts
 import { Question } from '../types/Question';
 
 const API_BASE = '/api';
