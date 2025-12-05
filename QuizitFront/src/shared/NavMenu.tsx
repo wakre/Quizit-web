@@ -9,7 +9,7 @@ const NavMenu: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/Login');
+    navigate('/');
   };
 
   return (

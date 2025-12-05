@@ -6,11 +6,13 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -26,6 +28,8 @@ const Login: React.FC = () => {
       navigate('/CreateQuiz');  // Redirect after login
     } catch (err: any) {
       setError(err.message);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -42,7 +46,10 @@ const Login: React.FC = () => {
           <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
         {error && <p className="text-danger">{error}</p>}
-        <button type="submit" className="btn btn-primary">Login</button>
+        {loading && <p className="text-info">Processing login...</p>}
+
+        <button type="submit" className="btn btn-primary"> {loading ? 'Please wait...' : 'Login'}</button>
+
       </form>
       <p>Don't have an account? <Link to="/register">Register</Link></p>
     </div>

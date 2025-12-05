@@ -3,6 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "../css/QuizList.css";
 
+import {Quiz} from "../types/Quiz";
+import { Question } from "../types/Question";
+import { Answer } from "../types/Answer";
+
+//moved into types 
+/*
 interface Quiz {
   QuizId: number;
   Title: string;
@@ -25,7 +31,7 @@ interface Answer {
   Text: string;
   IsCorrect: boolean;
 }
-
+*/
 const QuizDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -52,6 +58,9 @@ const QuizDetails: React.FC = () => {
     if (id) fetchQuizDetails();
   }, [id]);
 
+
+  // moved the code section into their own pages for better structure
+/*
   const handleDeleteQuiz = async () => {
     if (!window.confirm("Are you sure you want to delete this quiz?")) return;
 
@@ -86,6 +95,8 @@ const QuizDetails: React.FC = () => {
       setError(err.message || "Failed to delete question");
     }
   };
+*/
+
 
   if (loading) return <p>Loading quiz details...</p>;
   if (error) return <p className="text-danger">{error}</p>;
@@ -122,7 +133,7 @@ const QuizDetails: React.FC = () => {
               className="btn btn-warning me-2"
               onClick={() => {
                 if (!isOwner)
-                  return alert("Only the quiz owner can update this quiz.");
+                  return alert("Only the quiz owner can update this quiz. please login to edit your quiz");
                 navigate(`/UpdateQuiz/${quiz.QuizId}`);
               }}
             >
@@ -131,7 +142,12 @@ const QuizDetails: React.FC = () => {
 
             <button
               className="btn btn-danger"
-              onClick={() => navigate(`/DeleteQuiz/${quiz.QuizId}`)}
+              onClick={() => {
+                if (!isOwner)
+                  return alert("Only the quiz owner can delete this quiz. please log in to delete your quiz");
+                navigate(`/DeleteQuiz/${quiz.QuizId}`)
+              }}
+              
             >
               Delete Quiz
             </button>
@@ -155,16 +171,20 @@ const QuizDetails: React.FC = () => {
                     className="btn btn-sm btn-warning me-2"
                     onClick={() => {
                       if (!isOwner)
-                        return alert("Only the quiz owner can edit questions.");
+                        return alert("Only the quiz owner can edit questions. please log in to edit the question on your quiz");
                       navigate(`/UpdateQuestion/${q.QuestionId}`);
                     }}
                   >
                     Edit
                   </button>
 
-                                    <button
+                  <button
                     className="btn btn-sm btn-danger"
-                    onClick={() => navigate(`/DeleteQuestion/${q.QuestionId}`)}
+                    onClick={() => {
+                      if (!isOwner)
+                        return alert("Only the quiz owner can delete questions. please log in to delete the question on your quiz");
+                      navigate(`/DeleteQuestion/${q.QuestionId}`)
+                    }}
                   >
                     Delete
                   </button>
@@ -178,7 +198,7 @@ const QuizDetails: React.FC = () => {
             className="btn btn-primary"
             onClick={() => navigate(`/quiz/${quiz.QuizId}/play`)}
           >
-            Take Quiz
+            PLAY QUIZ
           </button>
         </div>
       </div>

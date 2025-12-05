@@ -1,19 +1,23 @@
 // src/components/QuizList.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";  // Assuming you're using React Router for navigation
+import { useNavigate } from "react-router-dom";  
 import "../css/QuizList.css";
+import { Quiz } from "../types/Quiz";
+import { getQuizzes } from "./QuizServices";
 
 // Updated interface to match QuizDto from the backend
+//QuizTypes.tsx
+/*
 interface Quiz {
-  QuizId: number;          // Matches API: QuizId
-  Title: string;           // Matches API: Title
-  Description?: string;    // Matches API: Description
-  ImageUrl?: string;       // Optional: For displaying quiz images
-  CategoryName: string;    // New: From QuizDto, for showing category
-  UserName: string;        // New: From QuizDto, for showing creator (optional in UI)
-  // Questions: QuestionDto[];  // Not needed for list view; omit to keep it lightweight
-}
+  QuizId: number;          
+  Title: string;           
+  Description?: string;    
+  ImageUrl?: string;       
+  CategoryName: string;    
+  UserName: string;        
+}*/
 
+// --- Quiz services 
 const QuizList: React.FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -23,10 +27,12 @@ const QuizList: React.FC = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await fetch("/api/quiz");  // Matches your backend route
-        if (!response.ok) throw new Error(`Error fetching quizzes: ${response.statusText}`);
-        const data: Quiz[] = await response.json();  // Now matches QuizDto structure
+        const data = await getQuizzes();
         setQuizzes(data);
+        /* removed fetch into service page for api calls:
+        const response = await fetch("/api/quiz");  
+        if (!response.ok) throw new Error(`Error fetching quizzes: ${response.statusText}`);
+        const data: Quiz[] = await response.json(); */ 
       } catch (err: any) {
         setError(err.message || "Unknown error");
       } finally {
@@ -39,6 +45,10 @@ const QuizList: React.FC = () => {
 
   if (loading) return <p>Loading quizzes...</p>;
   if (error) return <p className="text-danger">{error}</p>;
+
+
+  // --- rendering the frontend view of the quizlist
+
 return (
     <div className="container mt-4">
       <h2 className="mb-4">Available Quizzes</h2>

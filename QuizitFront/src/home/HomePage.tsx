@@ -20,7 +20,8 @@ const Homepage: React.FC = () => {
                   height: '100px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  opacity: '90%'
                 }}
               >
                 View Available Quizzes
@@ -34,7 +35,8 @@ const Homepage: React.FC = () => {
                   height: '100px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  opacity: '90%'
                 }}
               >
                 Create Your Own Quiz
